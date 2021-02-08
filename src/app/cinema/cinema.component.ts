@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { DomSanitizer } from '@angular/platform-browser';
 import {HttpClient} from '@angular/common/http';
 import {CinemaService} from '../service/cinema.service';
 
@@ -8,24 +9,25 @@ import {CinemaService} from '../service/cinema.service';
   styleUrls: ['./cinema.component.css']
 })
 export class CinemaComponent implements OnInit {
-public villes;
-public cinemas;
-public currentVille;
-public currentCinema;
-public salles;
-public projections;
-public currentProjection;
+  imageSource;
+  public villes;
+  public cinemas;
+  public currentVille;
+  public currentCinema;
+  public salles;
+  public projections;
+  public currentProjection;
   // @ts-ignore
   public selectedTickets: any[];
-  constructor(public cinemaService:CinemaService) { }
+  constructor(public cinemaService:CinemaService,private sanitizer: DomSanitizer) { }
 
   ngOnInit() {
-this.cinemaService.getVilles()
-  .subscribe(data=>{
-    this.villes=data;
-  },err=>{
-    console.log(err);
-  })
+    this.cinemaService.getVilles()
+      .subscribe(data=>{
+        this.villes=data;
+      },err=>{
+        console.log(err);
+      })
   }
 
   onGetCinema(v) {
@@ -77,7 +79,7 @@ this.cinemaService.getVilles()
       t.selected=false;
       this.selectedTickets.splice(this.selectedTickets.indexOf(t),1);
     }
-console.log(this.selectedTickets);
+    console.log(this.selectedTickets);
   }
   getTicketClass(t: any) {
     let str="btn ticket ";
@@ -99,12 +101,19 @@ console.log(this.selectedTickets);
       return tickets.push(t.id);
     });
     dataform.tickets=tickets;
-   this.cinemaService.payerTickets(dataform)
-     .subscribe(data=>{
-       alert("tickets reservés avec succès!");
-       this.onGetTicketsPlaces(this.currentProjection);
-     },err=>{
-       console.log(err);
-     })
+    this.cinemaService.payerTickets(dataform)
+      .subscribe(data=>{
+        alert("tickets reservés avec succès!");
+        this.onGetTicketsPlaces(this.currentProjection);
+      },err=>{
+        console.log(err);
+      })
+  }
+
+  getImages(image:any){
+    // console.log(image);
+    this.imageSource = this.sanitizer.bypassSecurityTrustResourceUrl(`data:image/png;base64, ${image}`);
+    console.log(this.imageSource)
+    return this.imageSource;
   }
 }

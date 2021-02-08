@@ -1,7 +1,7 @@
 <div class="container">
-  <div class="row">
-    <div class="col-md-3">
-      <ul *ngIf="villes" class="list-group">
+  <div class="row" >
+    <div class="col-md-3" style="font-weight: bold;color:burlywood;font-size: medium;text-align: center">
+      <ul *ngIf="villes" class="list-group" >
         <li [ngClass]="v==currentVille?'active':''" *ngFor="let v of villes._embedded.villes"
             class="list-group-item clickable"
             (click)="onGetCinema(v)">
@@ -12,24 +12,27 @@
     <div class="col-md-9">
 
       <div class=" panel panel-default">
-        <div class="panel-heading">Liste des cinemas</div>
+        <div class="panel-heading" style="background-color: bisque; text-align: center;font-weight: bold">Liste des cinemas</div>
         <div class="panel-body">
-          <ul *ngIf="cinemas" class="nav nav-pills">
+          <ul *ngIf="cinemas" class="nav nav-pills" style="text-align: center">
             <li [ngClass]="c==currentCinema?'active':''" *ngFor="let c of cinemas._embedded.cinemas" class="clickable">
-              <a (click)="onGetSalles(c)">{{c.name}}</a>
+              <a (click)="onGetSalles(c)" style="color: cadetblue">{{c.name}}</a>
             </li>
           </ul>
           <div class="row" *ngIf="salles">
             <div *ngFor="let s of salles._embedded.salles">
               <div class="col-md-6">
                 <div class="panel panel-default ">
-                  <div class="panel-heading">
+                  <div class="panel-heading" style="border-color: black;background-color: antiquewhite;text-align: center;color: darkgrey">
                     {{s.name}}</div>
                   <div class="panel-body" *ngIf="s.projections">
                     <div class="row">
                       <div class="col-md-5">
+                        <!--<img width="130"
+                             src="{{cinemaService.host+'/imageFilm/'+s.projections._embedded.projectionFilms [0].film.id}}">-->
                         <img width="130"
-                             src="{{cinemaService.host+'/imageFilm/'+s.projections._embedded.projectionFilms [0].film.id}}">
+                              [src]="getImages(s.projections._embedded.projectionFilms [0].film.photo)" ng-show="Base64 != null">
+
                       </div>
                       <div class="col-md-7">
                         <ul class="list-group">
